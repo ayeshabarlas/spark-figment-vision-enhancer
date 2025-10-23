@@ -1,9 +1,3 @@
-
-
-
-
-
-
 import { Navbar } from "@/components/Navbar";
 import { HRNavigationBar } from "@/components/HRNavigationBar";
 import { Card } from "@/components/ui/card";
