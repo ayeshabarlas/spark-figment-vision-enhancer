@@ -1,8 +1,45 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Clock, DollarSign, ChevronDown, Check, Calendar, Plus, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { 
+  Users, TrendingUp, Clock, DollarSign, ChevronDown, Check, Calendar, Plus, X,
+  Bell, Search, Settings, LogOut, UserCircle, FileText, 
+  LayoutDashboard, BarChart3, UserPlus, 
+  MessageSquare, CheckSquare, Lightbulb, 
+  Building2, BookOpen, HelpCircle, Menu
+} from "lucide-react";
+
+const sidebarMenuItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Clock, label: "Time Tracking", path: "/time-tracking" },
+  { icon: Users, label: "Meeting", path: "/meeting" },
+  { icon: Users, label: "Employees", path: "/employees" },
+  { icon: BarChart3, label: "Company Statistic", path: "/statistics" },
+  { icon: UserPlus, label: "Recruitment", path: "/recruitment" },
+  { icon: MessageSquare, label: "Messages", path: "/messages" },
+  { icon: CheckSquare, label: "Task", path: "/task" },
+  { icon: Calendar, label: "Calendar", path: "/calendar" },
+  { icon: Lightbulb, label: "Project Collaboration", path: "/projects" },
+  { icon: Building2, label: "HMRC", path: "/hmrc" },
+  { icon: BookOpen, label: "NewsFeed", path: "/newsfeed" },
+  { icon: BookOpen, label: "Course", path: "/course" },
+  { icon: FileText, label: "Policies", path: "/policies" },
+  { icon: HelpCircle, label: "Metro Assistant", path: "/assistant" },
+];
 
 const HRManagement = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("All Departments");
   const [showDeptDropdown, setShowDeptDropdown] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All Status");
@@ -10,6 +47,7 @@ const HRManagement = () => {
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 0, 8));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCreateProject, setShowCreateProject] = useState(false);
+  const [activeMenuItem, setActiveMenuItem] = useState("Dashboard");
   const [projectForm, setProjectForm] = useState({
     name: "",
     description: "",
@@ -76,6 +114,168 @@ const HRManagement = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Sidebar - Metro Solver Design */}
+      {isSidebarOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          
+          <aside className="fixed left-0 top-0 z-50 h-screen w-64 bg-white border-r border-gray-200 shadow-xl">
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <div className="w-2.5 h-5 bg-blue-600 rounded-sm transform -skew-x-12"></div>
+                    <div className="w-2.5 h-5 bg-blue-600 rounded-sm transform -skew-x-12"></div>
+                    <div className="w-2.5 h-5 bg-blue-400 rounded-sm transform -skew-x-12"></div>
+                  </div>
+                  <div>
+                    <h1 className="text-xs font-bold text-gray-900">METRO SOLVER</h1>
+                    <p className="text-[9px] text-gray-500">HR SOLUTION</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="w-7 h-7 rounded-full hover:bg-gray-100"
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <nav className="flex-1 overflow-y-auto py-3 px-2">
+                <ul className="space-y-1">
+                  {sidebarMenuItems.map((item) => {
+                    const isActive = activeMenuItem === item.label;
+                    return (
+                      <li key={item.label}>
+                        <button
+                          onClick={() => {
+                            setActiveMenuItem(item.label);
+                            setIsSidebarOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all ${
+                            isActive
+                              ? "bg-purple-600 text-white shadow-md"
+                              : "text-gray-700 hover:bg-gray-100"
+                          }`}
+                        >
+                          <item.icon className="w-5 h-5 flex-shrink-0" />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+
+              <div className="p-3 border-t border-gray-200 space-y-1">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-gray-700 hover:bg-gray-100"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="ml-3 text-sm">Settings</span>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="ml-3 text-sm">Log Out</span>
+                </Button>
+              </div>
+            </div>
+          </aside>
+        </>
+      )}
+
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-30 w-full border-b border-gray-200 bg-white">
+        <div className="container flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-6">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setIsSidebarOpen(true)}
+              className="hover:bg-gray-100"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+
+            <h1 className="text-xl font-bold text-blue-600 cursor-pointer hover:opacity-80 transition-opacity">
+              File Manager
+            </h1>
+            
+            <nav className="hidden md:flex items-center gap-4">
+              <Button variant="ghost" size="sm">Dashboard</Button>
+              <Button variant="ghost" size="sm">Files</Button>
+              <Button variant="ghost" size="sm">HR</Button>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2 relative">
+              <Search className="absolute left-3 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search files..."
+                className="w-64 pl-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <Button variant="ghost" size="icon">
+              <Bell className="w-5 h-5" />
+            </Button>
+            
+            <Button variant="ghost" size="icon">
+              <Settings className="w-5 h-5" />
+            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-blue-100 hover:ring-blue-300 transition-all">
+                    <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User" />
+                    <AvatarFallback className="bg-blue-600 text-white">JD</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-white">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">John Doe</p>
+                    <p className="text-xs leading-none text-gray-500">john.doe@example.com</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>My Files</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer text-red-600">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </header>
+
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">HR Management Dashboard</h1>
@@ -425,18 +625,4 @@ const HRManagement = () => {
                 { title: "Team Building Workshop", date: "Tomorrow, 10:00 AM" },
                 { title: "Performance Review Meeting", date: "Jan 25, 2:00 PM" },
                 { title: "New Employee Orientation", date: "Jan 28, 9:00 AM" },
-              ].map((event, idx) => (
-                <div key={idx} className="p-3 bg-gray-100 rounded-lg">
-                  <p className="text-sm font-medium mb-1">{event.title}</p>
-                  <p className="text-xs text-gray-600">{event.date}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default HRManagement;
+              ].map((event, idx
