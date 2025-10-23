@@ -1,3 +1,5 @@
+import { HRNavigationBar } from "@/components/HRNavigationBar";
+import { Card } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
