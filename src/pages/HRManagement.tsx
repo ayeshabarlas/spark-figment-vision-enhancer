@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/Navbar";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Users, TrendingUp, Clock, DollarSign, ChevronDown, Check, Calendar, Plus, X } from "lucide-react";
