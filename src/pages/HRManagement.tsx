@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Clock, DollarSign, ChevronDown, Check, Calendar, Menu } from "lucide-react";
+import { Users, TrendingUp, Clock, DollarSign, ChevronDown, Check, Calendar, Plus, X } from "lucide-react";
 
 const HRManagement = () => {
   const [selectedDepartment, setSelectedDepartment] = useState("All Departments");
@@ -9,9 +9,24 @@ const HRManagement = () => {
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 0, 8));
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showCreateProject, setShowCreateProject] = useState(false);
+  const [projectForm, setProjectForm] = useState({
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    team: "",
+    priority: "Medium"
+  });
+  const [projects, setProjects] = useState([
+    { name: "Website Redesign", team: "Engineering", status: "In Progress", dueDate: "Feb 15, 2025" },
+    { name: "Marketing Campaign Q1", team: "Marketing", status: "Planning", dueDate: "Jan 30, 2025" },
+    { name: "HR System Upgrade", team: "HR", status: "Active", dueDate: "Mar 10, 2025" },
+  ]);
 
   const departments = ["All Departments", "Engineering", "Marketing", "Sales", "HR", "Finance"];
   const statuses = ["All Status", "Active", "On Leave", "Remote"];
+  const priorities = ["Low", "Medium", "High", "Urgent"];
 
   const employees = [
     { name: "Olivia Rhye", status: "active", dept: "Engineering", avatar: "👤" },
@@ -22,10 +37,6 @@ const HRManagement = () => {
     { name: "Natali Craig", status: "active", dept: "Finance", avatar: "👤" },
     { name: "Drew Cano", status: "active", dept: "Engineering", avatar: "👤" },
     { name: "Orlando Diggs", status: "active", dept: "Marketing", avatar: "👤" },
-    { name: "Andi Lane", status: "active", dept: "Sales", avatar: "👤" },
-    { name: "Kate Morrison", status: "active", dept: "HR", avatar: "👤" },
-    { name: "Koray Okumus", status: "active", dept: "Finance", avatar: "👤" },
-    { name: "Natali Craig", status: "active", dept: "Engineering", avatar: "👤" },
   ];
 
   const stats = [
@@ -43,41 +54,28 @@ const HRManagement = () => {
 
   const { firstDay, daysInMonth } = getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth());
 
+  const handleCreateProject = () => {
+    if (projectForm.name && projectForm.team) {
+      setProjects([...projects, {
+        name: projectForm.name,
+        team: projectForm.team,
+        status: "Planning",
+        dueDate: projectForm.endDate || "TBD"
+      }]);
+      setProjectForm({
+        name: "",
+        description: "",
+        startDate: "",
+        endDate: "",
+        team: "",
+        priority: "Medium"
+      });
+      setShowCreateProject(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <nav className="bg-white border-b">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Menu className="w-6 h-6" />
-            <h1 className="text-xl font-bold">HR System</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm">Admin User</span>
-          </div>
-        </div>
-      </nav>
-
-      {/* HR Navigation Bar */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex gap-6 overflow-x-auto">
-            {["Dashboard", "Employees", "Attendance", "Leave", "Payroll", "Reports"].map((item) => (
-              <button
-                key={item}
-                className={`py-3 px-2 text-sm whitespace-nowrap border-b-2 ${
-                  item === "Dashboard" 
-                    ? "border-blue-600 text-blue-600 font-medium" 
-                    : "border-transparent text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">HR Management Dashboard</h1>
@@ -91,7 +89,7 @@ const HRManagement = () => {
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <Card key={stat.label} className="p-6 hover:shadow-lg transition-shadow">
+              <Card key={stat.label} className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
@@ -266,6 +264,141 @@ const HRManagement = () => {
           </div>
         </Card>
 
+        {/* Projects Section */}
+        <Card className="p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Active Projects</h3>
+            <button
+              onClick={() => setShowCreateProject(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Create Project
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {projects.map((project, idx) => (
+              <div key={idx} className="p-4 border rounded-lg hover:shadow-md transition-shadow bg-white">
+                <h4 className="font-semibold mb-2">{project.name}</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Team:</span>
+                    <span className="font-medium">{project.team}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Status:</span>
+                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
+                      {project.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Due Date:</span>
+                    <span className="text-gray-900">{project.dueDate}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Create Project Modal */}
+        {showCreateProject && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">Create New Project</h3>
+                <button
+                  onClick={() => setShowCreateProject(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Project Name *</label>
+                  <input
+                    type="text"
+                    value={projectForm.name}
+                    onChange={(e) => setProjectForm({...projectForm, name: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter project name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description</label>
+                  <textarea
+                    value={projectForm.description}
+                    onChange={(e) => setProjectForm({...projectForm, description: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows="3"
+                    placeholder="Project description"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Team *</label>
+                  <select
+                    value={projectForm.team}
+                    onChange={(e) => setProjectForm({...projectForm, team: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Team</option>
+                    {departments.filter(d => d !== "All Departments").map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      value={projectForm.startDate}
+                      onChange={(e) => setProjectForm({...projectForm, startDate: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">End Date</label>
+                    <input
+                      type="date"
+                      value={projectForm.endDate}
+                      onChange={(e) => setProjectForm({...projectForm, endDate: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Priority</label>
+                  <select
+                    value={projectForm.priority}
+                    onChange={(e) => setProjectForm({...projectForm, priority: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {priorities.map(priority => (
+                      <option key={priority} value={priority}>{priority}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setShowCreateProject(false)}
+                  className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateProject}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Create Project
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Recent Activities</h3>
@@ -274,9 +407,8 @@ const HRManagement = () => {
                 { name: "John Doe", action: "submitted leave request", time: "2 hours ago" },
                 { name: "Jane Smith", action: "updated profile", time: "4 hours ago" },
                 { name: "Mike Johnson", action: "completed training", time: "1 day ago" },
-                { name: "Sarah Williams", action: "clocked in", time: "2 days ago" },
               ].map((activity, idx) => (
-                <div key={idx} className="flex items-center justify-between py-3 border-b last:border-0">
+                <div key={idx} className="flex items-center justify-between py-2 border-b last:border-0">
                   <div>
                     <p className="text-sm font-medium">{activity.name}</p>
                     <p className="text-xs text-gray-500">{activity.action}</p>
@@ -286,17 +418,15 @@ const HRManagement = () => {
               ))}
             </div>
           </Card>
-          
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Upcoming Events</h3>
             <div className="space-y-3">
               {[
-                { title: "Team Building Workshop", date: "Tomorrow, 10:00 AM", color: "bg-blue-100" },
-                { title: "Performance Review Meeting", date: "Jan 25, 2:00 PM", color: "bg-purple-100" },
-                { title: "New Employee Orientation", date: "Jan 28, 9:00 AM", color: "bg-green-100" },
-                { title: "Department Meeting", date: "Jan 30, 3:00 PM", color: "bg-orange-100" },
+                { title: "Team Building Workshop", date: "Tomorrow, 10:00 AM" },
+                { title: "Performance Review Meeting", date: "Jan 25, 2:00 PM" },
+                { title: "New Employee Orientation", date: "Jan 28, 9:00 AM" },
               ].map((event, idx) => (
-                <div key={idx} className={`p-3 ${event.color} rounded-lg`}>
+                <div key={idx} className="p-3 bg-gray-100 rounded-lg">
                   <p className="text-sm font-medium mb-1">{event.title}</p>
                   <p className="text-xs text-gray-600">{event.date}</p>
                 </div>
