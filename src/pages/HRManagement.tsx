@@ -1,4 +1,4 @@
-import { TopNavBar } from "@/components/TopNavBar";
+import { Navbar } from "@/components/Navbar";
 import { HRNavigationBar } from "@/components/HRNavigationBar";
 import { Card } from "@/components/ui/card";
 import { Users, TrendingUp, Clock, DollarSign } from "lucide-react";
@@ -13,7 +13,7 @@ const HRManagement = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <TopNavBar />
+      <Navbar />
       <HRNavigationBar />
       
       <main className="container mx-auto px-4 py-8">

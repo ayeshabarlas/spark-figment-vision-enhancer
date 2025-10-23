@@ -1,9 +1,9 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileGridView } from "./FileGridView";
-import { FileUploadArea } from "./FileUploadArea";
+import { FileList } from "./FileList";
+import { FileUpload } from "./FileUpload";
 import { Grid, List, Upload } from "lucide-react";
 
-export const TabMenuBar = () => {
+export const TabMenu = () => {
   return (
     <Tabs defaultValue="grid" className="w-full">
       <TabsList className="grid w-full max-w-md grid-cols-3">
@@ -22,15 +22,15 @@ export const TabMenuBar = () => {
       </TabsList>
 
       <TabsContent value="grid" className="mt-6">
-        <FileGridView />
+        <FileList />
       </TabsContent>
 
       <TabsContent value="list" className="mt-6">
-        <FileGridView />
+        <FileList />
       </TabsContent>
 
       <TabsContent value="upload" className="mt-6">
-        <FileUploadArea />
+        <FileUpload />
       </TabsContent>
     </Tabs>
   );
